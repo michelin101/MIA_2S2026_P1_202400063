@@ -3,11 +3,13 @@
 #include <cstdlib>
 #include "analizador/tokenizador.hpp"
 #include "comandos/administracion_discos/mkdisk.hpp"
+#include "comandos/administracion_discos/rmdisk.hpp"
+#include "comandos/administracion_discos/fdisk.hpp"
 
 int main() {
-    srand(time(nullptr)); 
-    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 1) ===" << std::endl;
-    std::cout << "Escribe un comando (o 'salir' para terminar):" << std::endl;
+    srand(time(nullptr));
+
+    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 2) ===" << std::endl;
 
     std::string linea;
     while (true) {
@@ -24,8 +26,12 @@ int main() {
 
         if (parseado.nombre_comando == "mkdisk") {
             std::cout << comandos::ejecutar_mkdisk(parseado.parametros) << std::endl;
+        } else if (parseado.nombre_comando == "rmdisk") {
+            std::cout << comandos::ejecutar_rmdisk(parseado.parametros) << std::endl;
+        } else if (parseado.nombre_comando == "fdisk") {
+            std::cout << comandos::ejecutar_fdisk(parseado.parametros) << std::endl;
         } else {
-            std::cout << "ERROR: comando '" << parseado.nombre_comando << "' no reconocido." << std::endl;
+            std::cout << "ERROR: comando '" << parseado.nombre_comando << "' no reconocido" << std::endl;
         }
     }
 

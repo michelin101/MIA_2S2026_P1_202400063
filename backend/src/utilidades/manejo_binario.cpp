@@ -36,4 +36,23 @@ bool crear_archivo_disco(const std::string& ruta, long tamano_bytes){
     fclose(archivo);
     return true;
 }
+
+bool leer_mbr(const std::string& ruta, MBR& mbr_salida) {
+    std::ifstream archivo(ruta, std::ios::binary);
+    if (!archivo.is_open()) return false;
+    archivo.read(reinterpret_cast<char*>(&mbr_salida), sizeof(MBR));
+    bool ok = archivo.good() || archivo.eof(); 
+    archivo.close();
+    return ok;
+}
+
+bool escribir_mbr(const std::string& ruta, const MBR& mbr) {
+    std::fstream archivo(ruta, std::ios::in | std::ios::out | std::ios::binary);
+    if (!archivo.is_open()) return false;
+    archivo.seekp(0);
+    archivo.write(reinterpret_cast<const char*>(&mbr), sizeof(MBR));
+    archivo.close();
+    return true;
+}
+
 }
