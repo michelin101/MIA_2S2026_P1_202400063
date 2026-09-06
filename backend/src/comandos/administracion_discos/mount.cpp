@@ -4,6 +4,7 @@
 #include "../../sesion/particiones_montadas.hpp"
 #include "../../configuracion.hpp"
 #include <cstring>
+#include <algorithm>
 
 namespace comandos{
 
@@ -45,7 +46,7 @@ std::string ejecutar_mount(const std::map<std::string, std::string>& parametros)
 
     // validacion que ve que no este y amontada
     if(particion.part_status == '1'){
-        return "ERROR: MOUNT - la particion '" + nombre + "' ya se encuentra montada (id=" + std::string(particion.part_id) + ")";
+        return "ERROR: MOUNT - la particion '" + nombre + "' ya se encuentra montada (id=" + std::string(particion.part_id, sizeof(particion.part_id)) + ")";
     }
 
     // genera el id usando el signature unico del disco
@@ -60,7 +61,7 @@ std::string ejecutar_mount(const std::map<std::string, std::string>& parametros)
     particion.part_correlative = correlativo;
 
     memset(particion.part_id, 0, sizeof(particion.part_id));
-    strncpy(particion.part_id, id_generado.c_str(), sizeof(particion.part_id) - 1);
+    memcpy(particion.part_id, id_generado.c_str(), std::min(sizeof(particion.part_id), id_generado.size()));
 
     // persiste el cambio en el disco
     if(!manejo_binario::escribir_mbr(ruta, mbr)){

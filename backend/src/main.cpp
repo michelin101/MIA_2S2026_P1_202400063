@@ -7,11 +7,12 @@
 #include "comandos/administracion_discos/fdisk.hpp"
 #include "comandos/administracion_discos/mount.hpp"
 #include "comandos/administracion_discos/mounted.hpp"
+#include "comandos/sistema_archivos/mkfs.hpp"
 
 int main() {
     srand(time(nullptr));
 
-    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 3) ===" << std::endl;
+    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 4) ===" << std::endl;
 
     std::string linea;
     while (true) {
@@ -35,8 +36,10 @@ int main() {
         } else if (parseado.nombre_comando == "mount") {
             std::cout << comandos::ejecutar_mount(parseado.parametros) << std::endl;
         } else if (parseado.nombre_comando == "mounted") {
-        std::cout << comandos::ejecutar_mounted(parseado.parametros) << std::endl;
-        } else {
+            std::cout << comandos::ejecutar_mounted(parseado.parametros) << std::endl;
+        } else if(parseado.nombre_comando == "mkfs"){
+            std::cout << comandos::ejecutar_mkfs(parseado.parametros) << std::endl;
+        }else {
             std::cout << "ERROR: comando '" << parseado.nombre_comando << "' no reconocido" << std::endl;
         }
     }
