@@ -21,6 +21,8 @@ public:
     bool buscar_por_id(const std::string& id, InfoMontaje& info_salida);
     // retorna todos los ids montados actuales
     std::vector<std::string> listar_ids();
+    // busca la particion a trabajar, para ver si esta montada
+    bool ya_montada(const std::string& ruta_disco, const std::string& nombre_particion, std::string& id_salida);
 
 private:
     GestorMontajes() = default;

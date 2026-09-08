@@ -45,8 +45,9 @@ std::string ejecutar_mount(const std::map<std::string, std::string>& parametros)
     Partition& particion  = mbr.mbr_partitions[indice_encontrado];
 
     // validacion que ve que no este y amontada
-    if(particion.part_status == '1'){
-        return "ERROR: MOUNT - la particion '" + nombre + "' ya se encuentra montada (id=" + std::string(particion.part_id, sizeof(particion.part_id)) + ")";
+    std::string id_existente;
+    if (sesion::GestorMontajes::instancia().ya_montada(ruta, nombre, id_existente)) {
+        return "ERROR: MOUNT - la partición '" + nombre + "' ya se encuentra montada en esta sesión (id=" + id_existente + ").";
     }
 
     // genera el id usando el signature unico del disco

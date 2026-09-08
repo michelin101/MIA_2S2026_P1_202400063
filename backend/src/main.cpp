@@ -8,11 +8,14 @@
 #include "comandos/administracion_discos/mount.hpp"
 #include "comandos/administracion_discos/mounted.hpp"
 #include "comandos/sistema_archivos/mkfs.hpp"
+#include "comandos/sistema_archivos/mkfs.hpp"
+#include "comandos/usuarios/login.hpp"
+#include "comandos/usuarios/logout.hpp"
 
 int main() {
     srand(time(nullptr));
 
-    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 4) ===" << std::endl;
+    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 5) ===" << std::endl;
 
     std::string linea;
     while (true) {
@@ -39,6 +42,12 @@ int main() {
             std::cout << comandos::ejecutar_mounted(parseado.parametros) << std::endl;
         } else if(parseado.nombre_comando == "mkfs"){
             std::cout << comandos::ejecutar_mkfs(parseado.parametros) << std::endl;
+        } else if (parseado.nombre_comando == "mkfs") {
+            std::cout << comandos::ejecutar_mkfs(parseado.parametros) << std::endl;     
+        } else if (parseado.nombre_comando == "login") {
+            std::cout << comandos::ejecutar_login(parseado.parametros) << std::endl;
+        } else if (parseado.nombre_comando == "logout") {
+            std::cout << comandos::ejecutar_logout(parseado.parametros) << std::endl;
         }else {
             std::cout << "ERROR: comando '" << parseado.nombre_comando << "' no reconocido" << std::endl;
         }

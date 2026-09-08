@@ -47,4 +47,15 @@ std::vector<std::string> GestorMontajes::listar_ids(){
     return ids;
 }
 
+bool GestorMontajes::ya_montada(const std::string& ruta_disco, const std::string& nombre_particion,
+                                 std::string& id_salida) {
+    for (const auto& par : montajes_) {
+        if (par.second.ruta_disco == ruta_disco && par.second.nombre_particion == nombre_particion) {
+            id_salida = par.first;
+            return true;
+        }
+    }
+    return false;
+}
+
 }
