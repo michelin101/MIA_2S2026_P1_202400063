@@ -37,4 +37,13 @@ bool SesionUsuario::es_root() const{
     return usuario_ == "root";
 }
 
+
+void SesionUsuario::establecer_uid_gid(int uid, int gid) {
+    uid_ = uid;
+    gid_ = gid;
+}
+
+int SesionUsuario::uid_actual() const { return uid_; }
+
+int SesionUsuario::gid_actual() const { return gid_; }
 }

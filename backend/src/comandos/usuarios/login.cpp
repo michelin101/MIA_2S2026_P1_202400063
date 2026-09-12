@@ -88,7 +88,46 @@ std::string ejecutar_login(const std::map<std::string, std::string>& parametros)
     if(!clave_correcta){
         return "ERROR: LOGIN - autenticacion fallida, contraseña incorrecta";
     }
+    int uid_encontrado = 0;
+    int gid_encontrado = 0; // gid 
+
+    while (std::getline(flujo, linea)) {
+        std::istringstream partes(linea);
+        std::string uid, tipo, grupo, user, pass;
+        std::getline(partes, uid, ',');
+        std::getline(partes, tipo, ',');
+        std::getline(partes, grupo, ',');
+        std::getline(partes, user, ',');
+        std::getline(partes, pass, ',');
+
+        auto quitar_espacios = [](std::string& s) {
+            size_t inicio = s.find_first_not_of(" ");
+            if (inicio != std::string::npos) s = s.substr(inicio);
+        };
+        quitar_espacios(tipo); quitar_espacios(grupo); quitar_espacios(user); quitar_espacios(pass);
+
+        if (tipo == "U" && user == usuario) {
+            usuario_encontrado = true;
+            if (pass == clave) {
+                clave_correcta = true;
+                uid_encontrado = std::stoi(uid);
+                std::istringstream flujo2(contenido);
+                std::string linea2;
+                while (std::getline(flujo2, linea2)) {
+                    std::istringstream p2(linea2);
+                    std::string gid2, tipo2, grupo2;
+                    std::getline(p2, gid2, ','); std::getline(p2, tipo2, ','); std::getline(p2, grupo2, ',');
+                    quitar_espacios(tipo2); quitar_espacios(grupo2);
+                    if (tipo2 == "G" && grupo2 == grupo) { gid_encontrado = std::stoi(gid2); break; }
+                }
+            }
+            break;
+        }
+    }
+    
+    sesion::SesionUsuario::instancia().establecer_uid_gid(uid_encontrado, gid_encontrado);
     sesion::SesionUsuario::instancia().iniciar_sesion(usuario, id);
+
     return "LOGIN: sesion iniciada exitosamente como '" + usuario + "' en id= " + id;
 
 

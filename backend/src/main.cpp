@@ -17,11 +17,14 @@
 #include "comandos/usuarios/rmusr.hpp"
 #include "comandos/usuarios/chgrp.hpp"
 #include "comandos/sistema_archivos/cat.hpp"
+#include "comandos/archivos_carpetas/mkfile.hpp"
+#include "comandos/archivos_carpetas/mkdir.hpp"
+
 
 int main() {
     srand(time(nullptr));
 
-    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 5) ===" << std::endl;
+    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 6) ===" << std::endl;
 
     std::string linea;
     while (true) {
@@ -66,6 +69,10 @@ int main() {
             std::cout << comandos::ejecutar_chgrp(parseado.parametros) << std::endl;
         } else if (parseado.nombre_comando == "cat") {
             std::cout << comandos::ejecutar_cat(parseado.parametros) << std::endl;
+        } else if (parseado.nombre_comando == "mkfile") {
+            std::cout << comandos::ejecutar_mkfile(parseado.parametros) << std::endl;
+        } else if (parseado.nombre_comando == "mkdir") {
+            std::cout << comandos::ejecutar_mkdir(parseado.parametros) << std::endl;
         }else {
             std::cout << "ERROR: comando '" << parseado.nombre_comando << "' no reconocido" << std::endl;
         }
