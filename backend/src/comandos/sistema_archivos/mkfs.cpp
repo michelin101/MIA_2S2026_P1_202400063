@@ -122,7 +122,7 @@ std::string ejecutar_mkfs(const std::map<std::string, std::string>& parametros){
         inodo_raiz.i_block[i] = -1; 
     }
     inodo_raiz.i_block[0] = 0; // apunta al bloque 0 (cloque carpeta)
-    inodo_raiz.i_type = 0; // carpeta
+    inodo_raiz.i_type = '0'; // carpeta
     strncpy(inodo_raiz.i_perm, "664", 3);
 
     Bloque bloque_raiz;
