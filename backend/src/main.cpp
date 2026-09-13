@@ -19,12 +19,12 @@
 #include "comandos/sistema_archivos/cat.hpp"
 #include "comandos/archivos_carpetas/mkfile.hpp"
 #include "comandos/archivos_carpetas/mkdir.hpp"
-
+#include "comandos/reportes/rep.hpp"
 
 int main() {
     srand(time(nullptr));
 
-    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 6) ===" << std::endl;
+    std::cout << "=== ExtreamFS - modo consola (pruebas Sprint 7) ===" << std::endl;
 
     std::string linea;
     while (true) {
@@ -73,6 +73,8 @@ int main() {
             std::cout << comandos::ejecutar_mkfile(parseado.parametros) << std::endl;
         } else if (parseado.nombre_comando == "mkdir") {
             std::cout << comandos::ejecutar_mkdir(parseado.parametros) << std::endl;
+        } else if (parseado.nombre_comando == "rep") {
+            std::cout << comandos::ejecutar_rep(parseado.parametros) << std::endl;
         }else {
             std::cout << "ERROR: comando '" << parseado.nombre_comando << "' no reconocido" << std::endl;
         }
