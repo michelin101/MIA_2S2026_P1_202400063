@@ -12,10 +12,19 @@
 #include "../../utilidades/graphviz.hpp"
 #include "../../utilidades/navegacion_directorios.hpp"
 #include "../../utilidades/gestor_users_txt.hpp"
+#include "../../utilidades/bitmap.hpp"
 #include "../../estructuras/mbr.hpp"
 #include <fstream>
 
 namespace comandos{
+
+    static std::string quitar_comillas(std::string s) {
+    std::string resultado;
+    for (char c : s) {
+        if (c != '"') resultado += c;
+    }
+    return resultado;
+}
 
 std::string ejecutar_rep(const std::map<std::string, std::string>& parametros){
     auto it_name = parametros.find("name");
@@ -27,7 +36,7 @@ std::string ejecutar_rep(const std::map<std::string, std::string>& parametros){
     }
 
     std::string tipo_reporte = it_name->second;
-    std::string ruta_salida = it_path->second;
+    std::string ruta_salida = quitar_comillas(it_path->second);
     std::string id = it_id->second;
 
     sesion::InfoMontaje info;
@@ -44,7 +53,7 @@ std::string ejecutar_rep(const std::map<std::string, std::string>& parametros){
     // crea carpetas padre de la ruta de salida si no existen
     manejo_binario::crear_carpetas_padre(ruta_salida);
 
-    if (tipo_reporte == "bm_inode" || tipo_reporte == "bm_block") {
+    if (tipo_reporte == "bm_inode" || tipo_reporte == "bm_block" || tipo_reporte == "bm_bloc") {
         SuperBloque sb;
         std::ifstream archivo(info.ruta_disco, std::ios::binary);
         archivo.seekg(particion.part_start);
@@ -81,8 +90,11 @@ std::string ejecutar_rep(const std::map<std::string, std::string>& parametros){
         if (tipo_reporte == "sb") {
             size_t barra = info.ruta_disco.find_last_of('/');
             std::string nombre_disco = (barra == std::string::npos) ? info.ruta_disco : info.ruta_disco.substr(barra + 1);
-            contenido_dot = reportes::generar_dot_sb(sb, nombre_disco);
-        } else if (tipo_reporte == "inode") {
+            SuperBloque sb_para_mostrar = sb;
+            sb_para_mostrar.s_free_inodes_count = bitmap::contar_libres(info.ruta_disco, sb.s_bm_inode_start, sb.s_inodes_count);
+            sb_para_mostrar.s_free_blocks_count = bitmap::contar_libres(info.ruta_disco, sb.s_bm_block_start, sb.s_blocks_count);
+            contenido_dot = reportes::generar_dot_sb(sb_para_mostrar, nombre_disco);
+        }else if (tipo_reporte == "inode") {
             contenido_dot = reportes::generar_dot_inode(info.ruta_disco, sb);
         } else if (tipo_reporte == "block") {
             contenido_dot = reportes::generar_dot_block(info.ruta_disco, sb);
@@ -93,7 +105,7 @@ std::string ejecutar_rep(const std::map<std::string, std::string>& parametros){
             if (it_pfl == parametros.end()) {
                 return "ERROR: REP - el parametro -path_file_ls es obligatorio para el reporte " + tipo_reporte;
             }
-            std::string ruta_objetivo = it_pfl->second;
+            std::string ruta_objetivo = quitar_comillas(it_pfl->second);
 
             int indice_encontrado;
 
@@ -111,6 +123,21 @@ std::string ejecutar_rep(const std::map<std::string, std::string>& parametros){
 
             if (tipo_reporte == "file") {
                 std::string contenido_archivo = gestor_users::leer_contenido(info.ruta_disco, sb, indice_encontrado);
+
+                size_t punto = ruta_salida.find_last_of('.');
+                std::string extension = (punto == std::string::npos) ? "" : ruta_salida.substr(punto + 1);
+                for (auto& c : extension) c = tolower(c);
+
+                if (extension == "txt") {
+                    std::ofstream salida_texto(ruta_salida);
+                    if (!salida_texto.is_open()) {
+                        return "ERROR: REP - no se pudo escribir el reporte file.";
+                    }
+                    salida_texto << contenido_archivo;
+                    salida_texto.close();
+                    return "REP: reporte 'file' generado exitosamente en " + ruta_salida;
+                }
+
                 contenido_dot = reportes::generar_dot_file(info.ruta_disco, sb, ruta_objetivo, contenido_archivo);
             } else {
                 contenido_dot = reportes::generar_dot_ls(info.ruta_disco, sb, indice_encontrado);

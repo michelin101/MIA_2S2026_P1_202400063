@@ -1,6 +1,7 @@
 #include "mount.hpp"
 #include "../../estructuras/mbr.hpp"
 #include "../../utilidades/manejo_binario.hpp"
+#include "../../utilidades/validaciones.hpp"
 #include "../../sesion/particiones_montadas.hpp"
 #include "../../configuracion.hpp"
 #include <cstring>
@@ -9,6 +10,10 @@
 namespace comandos{
 
 std::string ejecutar_mount(const std::map<std::string, std::string>& parametros){
+    auto error_param = validaciones::validar_parametros_permitidos(
+        parametros, {"path", "name"}, "MOUNT");
+    if (!error_param.empty()) return error_param;
+    
     // path (obligatorio)
     auto it_path = parametros.find("path");
     if(it_path == parametros.end()){

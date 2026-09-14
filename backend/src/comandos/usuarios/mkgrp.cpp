@@ -60,7 +60,7 @@ std::string ejecutar_mkgrp(const std::map<std::string, std::string>& parametros)
         return "ERROR: MKGRP - no se pudo escribir en users.txt (posible falta de espacio)";
     }
 
-    return "MKGRO: grupo '" + nombre_grupo + "' creado exitosamente con GID=" + std::to_string(nuevo_gid);
+    return "MKGRP: grupo '" + nombre_grupo + "' creado exitosamente con GID=" + std::to_string(nuevo_gid);
 }
 
 }

@@ -9,4 +9,5 @@ namespace bitmap{
     // marca una posicion especifica como libre-0 otra vez
     void liberar_posicion(const std::string& ruta_disco, int byte_inicio, int indice);
 
+    int contar_libres(const std::string& ruta_disco, int byte_inicio, int cantidad);
 }

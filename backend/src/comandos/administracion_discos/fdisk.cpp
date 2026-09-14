@@ -3,6 +3,7 @@
 #include "../../estructuras/ebr.hpp"
 #include "../../utilidades/manejo_binario.hpp"
 #include "../../utilidades/ajustes.hpp"
+#include "../../utilidades/validaciones.hpp"
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
@@ -196,6 +197,10 @@ static std::string crear_logica(const MBR& mbr, const std::string& ruta, int tam
 
 // Funcion principal del comando
 std::string ejecutar_fdisk(const std::map<std::string, std::string>& parametros){
+    auto error_param = validaciones::validar_parametros_permitidos(
+        parametros, {"size", "unit", "path", "type", "fit", "name"}, "FDISK");
+    if (!error_param.empty()) return error_param;
+    
     // path (obligatorio)
     auto it_path = parametros.find("path");
     if(it_path == parametros.end()){

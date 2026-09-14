@@ -2,6 +2,7 @@
 #include "mkdisk.hpp"
 #include "../../utilidades/manejo_binario.hpp"
 #include "../../estructuras/mbr.hpp"
+#include "../../utilidades/validaciones.hpp"
 #include <cstring>
 #include <cstdlib>
 #include <ctime>
@@ -11,6 +12,10 @@
 namespace comandos {
 
 std::string ejecutar_mkdisk(const std::map<std::string, std::string>& parametros) {
+    auto error_param = validaciones::validar_parametros_permitidos(
+        parametros, {"size", "fit", "unit", "path"}, "MKDISK");
+    if (!error_param.empty()) return error_param;
+    
     // validad -path
     auto it_path = parametros.find("path");
     if (it_path == parametros.end()) {

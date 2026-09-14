@@ -42,4 +42,20 @@ void liberar_posicion(const std::string& ruta_disco, int byte_inicio, int indice
     archivo.close();
 }
 
+
+int contar_libres(const std::string& ruta_disco, int byte_inicio, int cantidad) {
+    std::ifstream archivo(ruta_disco, std::ios::binary);
+    if (!archivo.is_open()) return 0;
+
+    archivo.seekg(byte_inicio);
+    int libres = 0;
+    for (int i = 0; i < cantidad; i++) {
+        char bit;
+        archivo.read(&bit, 1);
+        if (bit == '0') libres++;
+    }
+    archivo.close();
+    return libres;
+}
+
 }
