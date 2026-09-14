@@ -79,6 +79,10 @@ std::string generar_dot_block(const std::string& ruta_disco, const SuperBloque& 
         dot << "  </table>\n  >];\n";
     }
 
+    for (size_t i = 0; i + 1 < indices_usados.size(); i++) {
+        dot << "  bloque" << indices_usados[i] << " -> bloque" << indices_usados[i + 1] << " [style=invis];\n";
+    }
+
     for (const auto& secuencia : bloques_por_inodo) {
         for (size_t i = 0; i + 1 < secuencia.size(); i++) {
             dot << "  bloque" << secuencia[i] << " -> bloque" << secuencia[i + 1] << ";\n";
